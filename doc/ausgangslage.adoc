@@ -1,0 +1,21 @@
+== Ausgangslage und Randbedingungen
+
+Wir sind bei OC aus verschiedenen Gründen auf Windows und MacOS als primäres Betriebssystem festgelegt.
+Gleichzeitig ändert sich das Arbeitsumfeld für viele Kollegen. Linux wird aufgrund verschiedener Aspekte immer wichtiger als Entwicklungsbetriebssystem.
+Dies hat auch Microsoft erkannt und mit dem Windows Subsystem für Linux (WSL / WSL2) eine Linux Command Line Integration bereitgestellt.
+Diese ist leichtgewichtiger als ein vollständiges Linux in einer VM.
+Für gewisse Einsatzszenarien ist dies ausreichend. Es gibt aber einige Einschränkungen, die eine Arbeit für viele Kollegen aber auch erschweren.
+
+Wesentliche Einschränkungen sind:
+
+ Kein vollständiges systemd: Es können keine Services gestartet werden
+* Abstützung auf die VM Plattform: Parallel kann kein anderer Hypervisor (wie Virtualbox) verwendet werden
+
+Diese Einschränkungen bewirken, dass bestimmte Tools nicht einfach installiert werden können, dazu zählen, z.B. docker oder k3s.
+Docker wird aber spannend, da das einfache Setup über Docker Desktop für Windows bald nur noch kommerziell (ab 01.02.2022) möglich ist.
+
+Und dazu kommen dann noch Einschränkungen, die sich aus dem Ökosystem ergeben.
+Man könnte von VirtualBox auf Hyper-V wechseln.
+Aber häufig werden virtuelle Boxen bei uns über `vagrant` aufgsetzt und provisioniert.
+Gerade im Infrastrukturbereich ist es nicht unüblich, dass dort mehrere VMs gleichzeitig für ein Projekt gestartet werden.
+Allerdings ist es aktuell nicht möglich die Netzwerkinfratstrukur mittels vagrant zu managen, d.h. man kann keine privaten Netze und feste IP Adressen definieren.
