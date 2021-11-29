@@ -16,6 +16,8 @@ curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | 
 # TODO or would need to check for presence of line in file before making modifications
 # TODO move to ansible
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant tee /home/vagrant/.zprofile
+
+# allow setting of DISPLAY variable for Windows XServer
 echo 'export DISPLAY=$(/sbin/ip route | awk '/default/ { print $3 }'):0'| sudo -u vagrant tee /home/vagrant/.zprofile 
 
 # install mcfly (advanced shell history)
@@ -114,6 +116,8 @@ sudo -u vagrant git config --global credential.helper store
 sudo -u vagrant git config --global core.editor vim
 sudo -u vagrant git config --global commit.template ~/.gitmessage
 sudo -u vagrant cp ansible/playbooks/files/git-commit-template.txt /home/vagrant/.gitmessage
+
+bash -s nerd-font.sh
 
 # clone
 echo "cloning repo..."
