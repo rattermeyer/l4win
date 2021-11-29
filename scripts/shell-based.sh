@@ -72,8 +72,31 @@ if [ ! -d /opt/intellij ] ; then
   tar xvz -C /opt/intellij -f /tmp/intellij.tar.gz
 fi
 
-# Install VS Code
+# VS Code
 sudo snap install --classic code
+CODE_EXTENSIONS=(
+"amazonwebservices.aws-toolkit-vscode" 
+"asciidoctor.asciidoctor-vscode"
+"DavidAnson.vscode-markdownlint"
+"dbaeumer.vscode-eslint"
+"dracula-theme.theme-dracula"
+"eamodio.gitlens"
+"EditorConfig.EditorConfig"
+"esbenp.prettier-vscode"
+"golang.go"
+"hashicorp.terraform"
+"hediet.vscode-drawio"
+"jebbs.plantuml"
+"joaompinto.asciidoctor-vscode"
+"marcostazi.VS-code-vagrantfile"
+"mimarec.swagger-doc-viewer"
+"ms-kubernetes-tools.vscode-kubernetes-tools"
+"ms-python.python"
+"redhat.vscode-yaml"
+)
+for i in "${CODE_EXTENSIONS[@]}"; do 
+  sudo -u vagrant code --install-extension "$i"
+done     
 
 # following is customizing the user experience
 # therefore, most things are done using as the actual user
@@ -105,9 +128,9 @@ fi
 
 ## brew installs
 echo "installing multiple brews..."
-sudo -H -i -u vagrant zsh -c "brew install gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s"
+sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s"
 
-# config git
+# Git
 # TODO move to Ansible
 echo "configure git"
 sudo -u vagrant git config --global core.pager delta
@@ -118,6 +141,14 @@ sudo -u vagrant git config --global commit.template ~/.gitmessage
 sudo -u vagrant cp ansible/playbooks/files/git-commit-template.txt /home/vagrant/.gitmessage
 
 bash -s nerd-font.sh
+
+# Samba
+# exporting vagrant home and /etc/rancher as shares.
+# the latter can be used to add config to lens as a kube config
+# need to mount shares and assign a device letter.
+apt-get install -y samba
+cp files/smb.conf /etc/samba/smb.conf
+systemctl restart smbd
 
 # clone
 echo "cloning repo..."
