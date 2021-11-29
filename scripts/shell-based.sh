@@ -6,7 +6,7 @@ apt-get update
 apt-get install -y zsh jq shellcheck fzf silversearcher-ag htop \
   bat tldr zip unzip ca-certificates httpie tig curl gnupg lsb-release \
   firefox python3 python3-pip rustc golang postgresql-client \
-  unattended-upgrades
+  mc unattended-upgrades
 apt-get install -y --no-install-recommends meld
  
 # install homebrew
@@ -15,10 +15,10 @@ curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | 
 # TODO this is not idempotent. better do it in ansible instead of bash?
 # TODO or would need to check for presence of line in file before making modifications
 # TODO move to ansible
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant tee /home/vagrant/.zprofile
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant tee -a /home/vagrant/.zprofile
 
 # allow setting of DISPLAY variable for Windows XServer
-echo 'export DISPLAY=$(/sbin/ip route | awk '/default/ { print $3 }'):0'| sudo -u vagrant tee /home/vagrant/.zprofile 
+echo export DISPLAY='$(/sbin/ip route | awk '"'"'/default/ { print $3 }'"'"'):0' | sudo -u vagrant tee -a /home/vagrant/.zprofile 
 
 # install mcfly (advanced shell history)
 echo "Install mcfly..."
