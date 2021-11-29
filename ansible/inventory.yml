@@ -1,0 +1,79 @@
+all:
+  hosts:
+    localhost:
+  vars:
+    user:
+      name: "Richard Attermeyer"
+      email: "richard.attermeyer@opitz-consulting.com"
+    username: "{{ ansible_user_id }}"
+    ansible_connection: local
+    os_packages:
+      - vim
+      - tmux
+      - byobu
+      - podman
+      - docker
+      - powerline
+      - fonts-powerline
+      - tig
+      - meld
+      - tmux
+      - java-11-openjdk-devel
+      - jq
+      - httpie
+      - rvm
+      - vagrant
+      - vagrant-libvirt
+      - cmake
+      - make
+      - python3-devel
+      - gcc-c++
+      - shellcheck
+      - tree
+      - pgcli
+      - borgbackup
+      - silversearcher-ag
+      - chromium-browser
+      - bat
+    vscode_extensions:
+      - visualstudioexptteam.vscodeintellicode
+      - DavidAnson.vscode-markdownlint
+      - dbaeumer.vscode-eslint
+      - joaompinto.asciidoctor-vscode
+      - ms-python.python
+      - golang.Go
+      - shd101wyy.markdown-preview-enhanced
+      - vscode-icons-team.vscode-icons
+      - vscoss.vscode-ansible
+      - yzhang.markdown-all-in-one
+      - ms-azuretools.vscode-docker
+      - ms-kubernetes-tools.vscode-kubernetes-tools
+      - esbenp.prettier-vscode
+      - eamodio.gitlens
+      - editorconfig.editorconfig
+      - dart-code.flutter
+      - timonwong.shellcheck
+      - dracula-theme.theme-dracula
+      - hediet.vscode-drawio
+      - ritwickdey.LiveServer
+      - msjsdiag.debugger-for-chrome
+      - redhat.vscode-yaml
+      - johnpapa.Angular2
+      - ms-vscode-remote.remote-ssh
+      - humao.rest-client
+      - xabikos.ReactSnippets
+      - mtxr.sqltools
+      - atlassian.atlascode
+    gitignores:
+      - Ansible.gitignore
+      - Backup.gitignore
+      - Diff.gitignore
+      - Eclipse.gitignore
+      - Emacs.gitignore
+      - JetBrains.gitignore
+      - NetBeans.gitignore
+      - SublimeText.gitignore
+      - Vagrant.gitignore
+      - Vim.gitignore
+      - VirtualEnv.gitignore
+      - VisualStudioCode.gitignore

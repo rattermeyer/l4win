@@ -7,13 +7,16 @@ apt-get install -y zsh jq shellcheck fzf silversearcher-ag htop \
   bat tldr zip unzip ca-certificates httpie tig curl gnupg lsb-release \
   firefox python3 python3-pip rustc golang postgresql-client \
   unattended-upgrades
+apt-get install -y --no-install-recommends meld
  
 # install homebrew
 echo "Install homebrew..."
 curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | sudo -u vagrant bash -s CI=1
 # TODO this is not idempotent. better do it in ansible instead of bash?
 # TODO or would need to check for presence of line in file before making modifications
+# TODO move to ansible
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant tee /home/vagrant/.zprofile
+echo 'export DISPLAY=$(/sbin/ip route | awk '/default/ { print $3 }'):0'| sudo -u vagrant tee /home/vagrant/.zprofile 
 
 # install mcfly (advanced shell history)
 echo "Install mcfly..."
@@ -25,6 +28,7 @@ pip3 install ansible ansible-lint yq tmuxp tig pre-commit
 
 # install docker
 # see https://docs.docker.com/engine/install/ubuntu/
+# TODO move to ansible
 echo "Install Docker..."
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 echo \
@@ -36,6 +40,7 @@ groupadd docker
 usermod -aG docker vagrant
 
 # install podman
+# TODO move to ansible
 . /etc/os-release
 echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
 curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key" | sudo apt-key add -
@@ -45,6 +50,7 @@ sudo apt-get -y install podman
 
 # Install k3s kubernetes distribution
 # see https://k3s.io
+# TODO move to ansible
 echo "Install k3s..."
 curl -sfL https://get.k3s.io | sh - 
 ## enable vagrant to read kubeconfig for k3s
@@ -56,6 +62,7 @@ systemctl restart k3s
 # curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 
 # Install IntelliJ
+# TODO Probably also in Ansible?
 echo "Install intellij..."
 if [ ! -d /opt/intellij ] ; then
   curl -sL "https://download.jetbrains.com/product?code=IU&latest&distribution=linux" > /tmp/intellij.tar.gz
@@ -85,16 +92,6 @@ sudo -u vagrant sh -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.
 echo "change vagrant shell to zsh..."
 chsh --shell /usr/bin/zsh vagrant
 
-# clone
-echo "cloning repo..."
-if [ ! -d /home/vagrant/git ] ; then
-  sudo -u vagrant sh -c mkdir -p /home/vagrant/git
-fi
-
-if [ ! -d /home/vagrant/git/l4win ]; then
-  sudo -H -u vagrant git clone https://github.com/rattermeyer/l4win.git /home/vagrant/git/l4win
-fi
-
 # clone powerlevel10k
 echo "installing oh-my-zsh theme p10k..."
 if [ ! -d /home/vagrant/.oh-my-zsh/custom/themes/powerlevel10k ]; then
@@ -109,8 +106,21 @@ echo "installing multiple brews..."
 sudo -H -i -u vagrant zsh -c "brew install gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s"
 
 # config git
+# TODO move to Ansible
 echo "configure git"
 sudo -u vagrant git config --global core.pager delta
 sudo -u vagrant git config --global interactive.diffFilter "delta --color-only"
 sudo -u vagrant git config --global credential.helper store
 sudo -u vagrant git config --global core.editor vim
+sudo -u vagrant git config --global commit.template ~/.gitmessage
+sudo -u vagrant cp ansible/playbooks/files/git-commit-template.txt /home/vagrant/.gitmessage
+
+# clone
+echo "cloning repo..."
+if [ ! -d /home/vagrant/git ] ; then
+  sudo -u vagrant sh -c mkdir -p /home/vagrant/git
+fi
+
+if [ ! -d /home/vagrant/git/l4win ]; then
+  sudo -H -u vagrant git clone https://github.com/rattermeyer/l4win.git /home/vagrant/git/l4win
+fi
