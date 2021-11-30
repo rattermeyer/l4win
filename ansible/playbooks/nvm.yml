@@ -7,12 +7,12 @@
   
   - name: load zsh plugin
     ansible.builtin.lineinfile:
-      path: /home/vagrant/.zshrc
+      path: "/home/{{ username }}/.zshrc"
       line: plugins+=(zsh-nvm)
       insertbefore: source $ZSH/oh-my-zsh.sh
 
   - name: configure lazy loading
     ansible.builtin.lineinfile:
-      path: /home/vagrant/.zshrc
+      path: "/home/{{ username }}/.zshrc"
       line: export NVM_LAZY_LOAD=true
-      
+
