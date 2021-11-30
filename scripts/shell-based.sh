@@ -5,8 +5,8 @@ echo "Install some additional packages..."
 apt-get update
 apt-get install -y zsh jq shellcheck fzf silversearcher-ag htop \
   bat tldr zip unzip ca-certificates httpie tig curl gnupg lsb-release \
-  firefox python3 python3-pip rustc golang postgresql-client \
-  mc unattended-upgrades
+  firefox python3 python3-pip pylint rustc golang postgresql-client \
+  cmake mc unattended-upgrades
 apt-get install -y --no-install-recommends meld
  
 # install homebrew
@@ -20,9 +20,10 @@ echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant 
 # allow setting of DISPLAY variable for Windows XServer
 echo export DISPLAY='$(/sbin/ip route | awk '"'"'/default/ { print $3 }'"'"'):0' | sudo -u vagrant tee -a /home/vagrant/.zprofile 
 
-# install mcfly (advanced shell history)
+# McFly (advanced shell history)
 echo "Install mcfly..."
 curl -LSfs https://raw.githubusercontent.com/cantino/mcfly/master/ci/install.sh | sh -s -- --git cantino/mcfly
+sudo -u vagrant zsh -c eval "$(mcfly init zsh)"
 
 # install ansible and some other packages
 echo "Install ansible and other python packages..."
@@ -33,13 +34,29 @@ pip3 install ansible ansible-lint yq tmuxp tig pre-commit
 # TODO move to ansible
 echo "Install Docker..."
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io
 groupadd docker
 usermod -aG docker vagrant
+
+# Hashicorp Tools
+echo "Install Hashicorp Tools..."
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+apt-get update && sudo apt-get install -y consul nomad vault terraform consul-template
+sudo -u vagrant zsh -c boundary config autocomplete install
+sudo -u vagrant zsh -c consul -autocomplete-install
+sudo -u vagrant zsh -c nomad -autocomplete-install
+sudo -u vagrant zsh -c terraform -install-autocomplete
+
+# AWS CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+
+# Azure CLI
+curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # install podman
 # TODO move to ansible
@@ -111,7 +128,9 @@ sudo -u vagrant sh -c "curl -s https://get.sdkman.io | bash"
 
 # install nvm (managing node versions)
 echo "Install nvm..."
-sudo -u vagrant sh -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash"
+#sudo -u vagrant sh -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash"
+git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
+
 
 ## change shell to zsh
 echo "change vagrant shell to zsh..."
@@ -128,7 +147,12 @@ fi
 
 ## brew installs
 echo "installing multiple brews..."
-sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s"
+sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s terragrunt cdktf"
+# set alias
+echo "alias ls='lsd'" >> .oh-my-zsh/custom/alias.zsh
+# kubeconfig for k3s
+sudo -u vagrant mkdir /home/vagrant/.kube
+sudo -u vagrant ln -s /etc/rancher/k3s/k3s.yaml /home/vagrant/.kube/config
 
 # Git
 # TODO move to Ansible
@@ -140,15 +164,26 @@ sudo -u vagrant git config --global core.editor vim
 sudo -u vagrant git config --global commit.template ~/.gitmessage
 sudo -u vagrant cp ansible/playbooks/files/git-commit-template.txt /home/vagrant/.gitmessage
 
+echo "install nerd font..."
 bash -s nerd-font.sh
 
 # Samba
 # exporting vagrant home and /etc/rancher as shares.
 # the latter can be used to add config to lens as a kube config
 # need to mount shares and assign a device letter.
+echo "install and configure samba"
 apt-get install -y samba
 cp files/smb.conf /etc/samba/smb.conf
 systemctl restart smbd
+# create smb user vagrant/vagrant
+(echo vagrant; echo vagrant) | sudo smbpasswd -a -s vagrant
+
+# Lens
+echo "install lens"
+LENS_FILE=Lens-5.3.0-latest.20211125.2.amd64.deb
+wget "https://api.k8slens.dev/binaries/${LENS_FILE}"
+apt install -y libnotify4 libnss3 libxss1 xdg-utils libsecret-1-0 libnspr4 libsecret-common libxshmfence1 libgbm1  
+dpkg -i "${LENS_FILE}"
 
 # clone
 echo "cloning repo..."
@@ -159,3 +194,9 @@ fi
 if [ ! -d /home/vagrant/git/l4win ]; then
   sudo -H -u vagrant git clone https://github.com/rattermeyer/l4win.git /home/vagrant/git/l4win
 fi
+
+# Run Ansible
+# Workaround youcomplete me
+ln -s /bin/gcc /bin/gcc-5
+echo "running ansible"
+sudo -u vagrant sh -c cd git/l4win/ansible && ansible-playbook -i inventory.yml playbooks/site.yml

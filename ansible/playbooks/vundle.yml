@@ -8,7 +8,7 @@
     - name: Install Vundle
       git:
         repo: https://github.com/gmarik/Vundle.vim.git
-        dest: "/home/{{ username}}/.vim/bundle/Vundle.vim"
+        dest: "/home/{{ username }}/.vim/bundle/Vundle.vim"
     - name: copy vimrc
       copy:
         src: "vimrc"
@@ -26,3 +26,20 @@
     - name: Update Plugins
       command: vim +PluginUpdate +qall
       when: "vimrc is changed"
+
+    - name: "compile YouCompleteMe"
+      block: 
+      - name: link file
+        ansible.builtin.file: 
+          state: link
+          src: /usr/bin/gcc
+          dest: /usr/bin/gcc-5
+        become: True
+      - name: run install.py
+        ansible.builtin.command:
+          cmd: install.py
+          chdir: /home/vagrant/.vim/bundle/YouCompleteMe
+
+
+      
+
