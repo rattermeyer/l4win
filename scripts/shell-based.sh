@@ -141,7 +141,7 @@ fi
 
 ## brew installs
 echo "installing multiple brews..."
-sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s terragrunt cdktf"
+sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s dive helm terragrunt cdktf"
 
 # set alias
 # TODO this should be moved to ansible to make it idempotent
@@ -174,6 +174,12 @@ if [ ! -f /usr/bin/lens ] ; then
   apt install -y libnotify4 libnss3 libxss1 xdg-utils libsecret-1-0 libnspr4 libsecret-common libxshmfence1 libgbm1  
   dpkg -i "${LENS_FILE}"
 fi
+
+# trivy
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+apt-add-repository "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main"
+apt-get update
+apt-get install trivy
 
 # clone
 echo "cloning repo..."

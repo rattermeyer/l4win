@@ -95,8 +95,103 @@ sdk install gradle
 sdk install maven
 ```
 
+### Install node version
+
+```bash
+nvm install --lts
+```
+
 ### Connect Lens to your kubernetes cluster
 
 K3s writes is configuration to `/etc/rancher/k3s/k3s.yaml`.
 Copy this file to your Window host `cp /etc/rancher/k3s/k3s.yaml /vagrant`. From there move it where you want it to be located.
 In lens add this to add your cluster.
+
+## What is in the Box?
+
+### Command Line
+
+The shell of the vagrant user is configured to zsh.
+The configurations are managed using [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh).
+The theme is using [Powerlevel10k](https://github.com/romkatv/powerlevel10k).
+You can reconfigure p10k using `p10k configure`.
+
+A lot of modern Linux command line tools are installed.
+
+- [jq](https://stedolan.github.io/jq/): for handling json files
+- [yq](https://github.com/mikefarah/yq): for handling yaml files
+- [fzf](https://github.com/junegunn/fzf)
+- [silversearcher-ag](https://github.com/ggreer/the_silver_searcher) (`ag` on the command line)
+- htop: a modern top
+- [bat](https://github.com/sharkdp/bat): an advanced cat
+- [tldr](https://tldr.sh): an easy to consume man page alternative
+- [httpie](https://httpie.io): curl for the modern json API age.
+- [curlie](https://github.com/rs/curlie): similar to httpie
+- [lsd](https://github.com/Peltoche/lsd): modern `ls` replacement. An alias has been set from `ls` to `lsd`. It is CLI compatible with `ls`
+- [broot](https://github.com/Canop/broot): easily navigate to all subdirs using `br`
+- [procs](https://github.com/dalance/procs): a modern ps
+- [mcfly](https://github.com/cantino/mcfly): navigation of your shell history
+- [tmuxp](https://github.com/tmux-python/tmuxp): store tmux session manager
+
+### Linux GUI apps
+
+A `DISPLAY` variable is exported, that will support an X Server running on Windows, so you can easily start GUI apps, like IntelliJ from the command line.
+
+### Programming Languages and Development Environment
+
+The box is prepared for different languages / frameworks
+
+- Java (using sdkman)
+- node (using nvm)
+- Python3 (including pylint)
+- golang
+
+#### Java IDE
+
+If you need an IDE for development, you can use Intellij.
+This requires an X Server on Windows.
+Intellij is installed at /opt/intellij
+
+### Git support
+
+#### Git commit message template
+
+Git is installed and an opinionated configuration has been provided.
+This includes the use of a `gitmessage` template to push better commit messages.
+It configures [Vim](https://www.vim.org) as the editor.
+If you use git from the command line or tig, this git commit template will be displayed.
+
+#### Credential Store
+
+It configures a credential store.
+You should therefore not use your general password, but only personal access tokens for authentication against a git server (github, GitLab or Bitbucket).
+
+#### Diff and Merge
+
+The configuration defines [delta](https://github.com/dandavison/delta) as the diff filter.
+
+And uses [meld](https://meldmerge.org) as the mergetool.
+This requires a running X Server on Windows.
+
+#### Git Guis
+
+Different CLI GUIs are installed
+
+- [tig](https://github.com/jonas/tig)
+- [gitui](https://github.com/extrawurst/gitui)
+- [lazygit](https://github.com/jesseduffield/lazygit)
+
+### Docker and Kubernetes
+
+The VM contains the [k3s](https://k3s.io) Kubernetes distribution.
+The kubeconfig for this cluster is linked from `.kube/config`.
+
+You can use the cli tool [`k9s`](https://github.com/derailed/k9s) to get an overview of the cluster.
+
+With a running X Server on Windows you can also use the  [`lens`](https://k8slens.dev) kubernetes IDE to explore your cluster(s).
+
+Lens could also be used on Windows, if you mount the k3s samba and map it to a drive letter.
+
+We have also `docker` and `podman` available on the VM.
+
+You can scan images using `trivy`(https://github.com/aquasecurity/trivy) and explore images using [`dive`](https://github.com/wagoodman/dive).
