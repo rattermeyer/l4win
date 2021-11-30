@@ -4,6 +4,10 @@
       become: True
       package:
         name: vim
+      loop:
+      - vim
+      - build-essentials
+      - cmake
 
     - name: Install Vundle
       git:
@@ -13,33 +17,8 @@
       copy:
         src: "vimrc"
         dest: "/home/{{ username }}/.vimrc"
-      register: vimrc
+      notify: plugins update
 
-    - name: Clean Plugins
-      command: vim +PluginClean +qall
-      when: "vimrc is changed"
-
-    - name: Install Plugins
-      command: vim +PluginInstall +qall
-      when: "vimrc is changed"
-
-    - name: Update Plugins
-      command: vim +PluginUpdate +qall
-      when: "vimrc is changed"
-
-    - name: "compile YouCompleteMe"
-      block: 
-      - name: link file
-        ansible.builtin.file: 
-          state: link
-          src: /usr/bin/gcc
-          dest: /usr/bin/gcc-5
-        become: True
-      - name: run install.py
-        ansible.builtin.command:
-          cmd: install.py
-          chdir: /home/vagrant/.vim/bundle/YouCompleteMe
-
-
-      
-
+  handlers:
+    - name: "plugins update"
+      import_tasks: tasks/vim-plugin-update.yml
