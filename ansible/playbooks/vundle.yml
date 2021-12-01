@@ -40,9 +40,3 @@
          dest: /usr/bin/gcc-5
        become: True
        listen: "update plugins"
-
-     - name: run install.py
-       ansible.builtin.command:
-         cmd: ./install.py
-         chdir: /home/vagrant/.vim/bundle/YouCompleteMe
-       listen: "update plugins"

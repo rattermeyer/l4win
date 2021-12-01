@@ -1,5 +1,5 @@
 #!/bin/bash
-# scripts used here must be idempotent
+# scripts used here must be idempotent (and are probably not yet)
 
 echo "Install some additional packages..."
 apt-get update
@@ -15,6 +15,8 @@ curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | 
 # TODO this is not idempotent. better do it in ansible instead of bash?
 # TODO or would need to check for presence of line in file before making modifications
 # TODO move to ansible
+# actually, we do want it _not_ to expand, so disable shellcheck check on next line
+# shellcheck disable=SC2016
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant tee -a /home/vagrant/.zprofile
 
 # allow setting of DISPLAY variable for Windows XServer
@@ -24,7 +26,7 @@ echo export DISPLAY='$(/sbin/ip route | awk '"'"'/default/ { print $3 }'"'"'):0'
 # McFly (advanced shell history)
 echo "Install mcfly..."
 curl -LSfs https://raw.githubusercontent.com/cantino/mcfly/master/ci/install.sh | sh -s -- --git cantino/mcfly
-sudo -u vagrant zsh -c eval "$(mcfly init zsh)"
+sudo -H -u vagrant zsh -c eval "$(mcfly init zsh)"
 
 # install ansible and some other packages
 echo "Install ansible and other python packages..."
@@ -60,6 +62,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # install podman
 # TODO move to ansible
+# shellcheck source=/etc/os-release
 . /etc/os-release
 curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_$(lsb_release -rs)/Release.key" | sudo apt-key add -
 echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_$(lsb_release -rs)/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
@@ -68,18 +71,23 @@ sudo apt-get update
 sudo apt-get -y upgrade
 sudo apt-get -y install podman
 
+###### Kubernetes distros ##############
+
 # Install k3s kubernetes distribution
 # see https://k3s.io
 # TODO move to ansible
-echo "Install k3s..."
-curl -sfL https://get.k3s.io | sh - 
-## enable vagrant to read kubeconfig for k3s
-echo "K3S_KUBECONFIG_MODE=0644"| sudo tee /etc/systemd/system/k3s.service.env
-systemctl restart k3s
+#echo "Install k3s..."
+#curl -sfL https://get.k3s.io | sh - 
+### enable vagrant to read kubeconfig for k3s
+#echo "K3S_KUBECONFIG_MODE=0644"| sudo tee /etc/systemd/system/k3s.service.env
+#systemctl restart k3s
+#systemctl stop k3s
+#systemctl disable k3s
+## rm link to k3s
+#rm /usr/local/bin/kubectl
+# We provide k3sup
 
-# install k3d
-# see: https://k3d.io/v5.1.0/#installation
-# curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+###### IDE / Editor ######################
 
 # Install IntelliJ
 # TODO Probably also in Ansible?
@@ -88,6 +96,8 @@ if [ ! -d /opt/intellij ] ; then
   curl -sL "https://download.jetbrains.com/product?code=IU&latest&distribution=linux" > /tmp/intellij.tar.gz
   mkdir -p /opt/intellij
   tar xvz -C /opt/intellij -f /tmp/intellij.tar.gz
+# making this owned by intellij allows for easy update from within intellij
+  chown -R vagrant: /opt/intellij
 fi
 
 # VS Code
@@ -116,6 +126,7 @@ for i in "${CODE_EXTENSIONS[@]}"; do
   sudo -u vagrant code --install-extension "$i"
 done     
 
+########### CLI / Shell #################
 # following is customizing the user experience
 # therefore, most things are done using as the actual user
 
@@ -142,7 +153,7 @@ fi
 
 ## brew installs
 echo "installing multiple brews..."
-sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie derailed/k9s/k9s dive helm terragrunt cdktf"
+sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie kubectl k3d k3sup derailed/k9s/k9s dive helm terragrunt cdktf"
 
 # set alias
 # TODO this should be moved to ansible to make it idempotent
@@ -150,7 +161,6 @@ echo "alias ls='lsd'" >> .oh-my-zsh/custom/alias.zsh
 echo "alias bat='batcat'" >> .oh-my-zsh/custom/alias.zsh
 # kubeconfig for k3s
 sudo -u vagrant mkdir /home/vagrant/.kube
-sudo -u vagrant ln -s /etc/rancher/k3s/k3s.yaml /home/vagrant/.kube/config
 
 echo "install nerd font..."
 bash -s nerd-font.sh
@@ -195,4 +205,5 @@ fi
 # Run Ansible
 # Workaround youcomplete me
 echo "running ansible"
+sudo -H -u vagrant sh -c 'cd /home/vagrant/git/l4win/ansible ; ansible-playbook -i inventory.yml playbooks/site.yml'
 sudo -H -u vagrant sh -c 'unset SUDO_USER; unset SUDO_COMMAND; env ; cd /home/vagrant/.vim/bundle/YouCompleteMe ; ./install.py'
