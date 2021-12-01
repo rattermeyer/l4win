@@ -87,7 +87,18 @@ Open a new tab with the l4win profile.
 
 You should be asked several questions. Configure it to your liking
 
-### Install Java
+### Personalize Git Config
+
+You must set your name and email, so git can record this in the commits.
+
+```bash
+git config --global user.name Max Mustermann
+git config --global user.email max.mustermann@mycompany.com
+```
+
+Replace name and email with your real ones, of course.
+
+### Install Java and build tools
 
 ```bash
 sdk install java
@@ -95,17 +106,11 @@ sdk install gradle
 sdk install maven
 ```
 
-### Install node version
+### Install latest node lts version
 
 ```bash
 nvm install --lts
 ```
-
-### Connect Lens to your kubernetes cluster
-
-K3s writes is configuration to `/etc/rancher/k3s/k3s.yaml`.
-Copy this file to your Window host `cp /etc/rancher/k3s/k3s.yaml /vagrant`. From there move it where you want it to be located.
-In lens add this to add your cluster.
 
 ## What is in the Box?
 
