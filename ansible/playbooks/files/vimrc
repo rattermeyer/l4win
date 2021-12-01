@@ -1,0 +1,148 @@
+" this requires vundle.
+" Install vundle: git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+set nocompatible              " be iMproved, required
+set number
+set showcmd
+"set visualbell
+set gcr=a:blinkon0
+set hidden
+let mapleader=","
+filetype off                  " required
+
+" ====== disable arrow keys - to learn it the real vim way ======
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+map <C-t> :NERDTreeToggle<CR>
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+Plugin 'tpope/vim-fugitive'
+Plugin 'reedes/vim-pencil'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'L9'
+Plugin 'tomasr/molokai'
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tyru/open-browser.vim'
+Plugin 'aklt/plantuml-syntax'
+Plugin 'weirongxu/plantuml-previewer.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'pearofducks/ansible-vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'klen/python-mode'
+Plugin 'elzr/vim-json'
+Plugin 'tpope/vim-surround'
+Plugin 'scrooloose/syntastic'
+Plugin 'dagwieers/asciidoc-vim'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-repeat'
+Plugin 'majutsushi/tagbar'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'dracula/vim'
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" " To ignore plugin indent changes, instead use:
+" "filetype plugin on
+" "
+" " Brief help
+" " :PluginList       - lists configured plugins
+" " :PluginInstall    - installs plugins; append `!` to update or just
+" :PluginUpdate
+" " :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" " :PluginClean      - confirms removal of unused plugins; append `!` to
+" auto-approve removal
+" "
+" " see :h vundle for more details or wiki for FAQ
+" " Put your non-Plugin stuff after this line
+set expandtab
+set smartindent
+set smarttab
+set autoindent
+filetype indent on
+autocmd FileType java setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType coffee setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType html setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType css setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType sass setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType scss setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType yaml setlocal shiftwidth=2 tabstop=2  expandtab
+autocmd FileType yml setlocal shiftwidth=2 tabstop=2  expandtab
+autocmd FileType  setlocal shiftwidth=2 tabstop=2  expandtab
+autocmd FileType ruby setlocal shiftwidth=2 tabstop=2 expandtab
+" ================ Folds ============================
+
+set foldmethod=indent   "fold based on indent
+set foldnestmax=3       "deepest fold is 3 levels
+set nofoldenable        "dont fold by default
+" ================ Search ===========================
+"
+set incsearch       " Find the next match as we type the search
+set hlsearch        " Highlight searches by default
+set ignorecase      " Ignore case when searching...
+set smartcase       " ...unless we type a capital
+
+"
+" configuration of airline
+set laststatus=2
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+let g:airline_theme='powerlineish'
+let g:airline_powerline_fonts = 1
+" end-of-airline
+"
+" Config pencil plugin
+augroup pencil
+        autocmd!
+"        autocmd FileType markdown,mkd call pencil#init()
+        autocmd FileType text         call pencil#init()
+augroup END
+" ================ Completion =======================
+"
+set wildmode=list:longest
+set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
+set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
+set wildignore+=*vim/backups*
+set wildignore+=*sass-cache*
+set wildignore+=*DS_Store*
+set wildignore+=vendor/rails/**
+set wildignore+=vendor/cache/**
+set wildignore+=*.gem
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=*.png,*.jpg,*.gif
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+"================ Colorscheme ================================
+set background=dark
+" colorscheme solarized
+set t_Co=256
+" ============== CtrlP ========================================
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|class)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }

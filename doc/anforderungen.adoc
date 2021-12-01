@@ -1,0 +1,101 @@
+== Anforderungen
+
+Daraus ergeben sich an die Gesamtlösung folgende Anforderungen:
+
+* Einbindung in Windows Terminal
+** Wie WSL kann das Windows Terminal genutzt werden, um eine CLI aufzumachen
+* Bereitstellung einer Linux (komfortablen) CLI mit nützlichen und modernen CLI Tools.
+** Es muss die Darstellung einer komfortablen CLI mit Icons etc. möglich sein
+* Unterstützung einer statischen / festen / stabilen IP
+* Remote Development support
+** Damit IDEs und Editoren unter Windows laufen können, während der Code unter der Linux VM liegt
+
+== Linux VM
+
+* private network
+* spezifische IP aus einem https://portal.opitz-consulting.de/IT/Lists/FAQ/DispForm.aspx?ID=26[freigegebenen Adressbereich]
+* Bei Nutzung von IntelliJ Remote (> 8GB) mehr Speicher
+
+=== Linux CLI Tooling
+
+Im folgenden werden die wesentlichen Tools aufgelistet, welche unter der CLI verfügbar sein sollen.
+
+==== Shell
+Als Shell soll https://ohmyz.sh[`oh-my-zsh`] mit einem https://github.com/romkatv/powerlevel10k[powerlevel10k] Theme zur Verfügung stehen.
+Dies benötigt https://www.nerdfonts.com[Nerd Fonts] (etwa Fira Code NF) auf Windows und eine entsprechende Einrichtung des Windows Terminals.
+
+==== Modern Linux Commands
+Es sollen neben den klassischen CLI Tools wichtige moderne Varianten standardmäßig installiert sein, um das Arbeiten mit der Shell zu vereinfachen.
+
+Diese beinhalten
+
+* https://github.com/Canop/broot[broot]
+* https://github.com/cantino/mcfly[mcfly]
+* https://htop.dev[htop]
+* https://github.com/tldr-pages/tldr[tldr]
+* https://github.com/sharkdp/bat[bat]
+* https://github.com/Peltoche/lsd[lsd]
+* https://github.com/dandavison/delta[delta]
+* https://github.com/ggreer/the_silver_searcher[ag]
+* https://github.com/stedolan/jq[jq] und https://pypi.org/project/yq/[yq]
+* https://httpie.io[httpie] oder https://github.com/rs/curlie[curlie]
+* https://github.com/koalaman/shellcheck[Shellcheck]
+* https://consulproject.io[consul]
+* https://nomadproject.io[nomad]
+* https://vaultproject.io[vault]
+
+==== Git Setup
+
+Es wird ein Standardgitsetup eingerichtet.
+Zusätzlich wird https://jonas.github.io/tig/[tig] benötigt.
+Git wird automatisch mit https://github.com/dandavison/delta[delta] Integration aufgesetzt.
+
+Dazu zählt auch die Vorbereitung für https://pre-commit.com[pre-commit]
+
+==== CLI Texteditor
+
+Vernünftiges (neo)vim setup mit wichtigen Plugins.
+
+==== Local Config Management
+
+* https://sdkman.io[sdkman]
+* https://github.com/nvm-sh/nvm[nvm]
+
+
+==== Configuration Management Tools
+
+* Ansible
+* Ansible Linter
+* Terraform
+
+==== Container Services
+
+Neben den Standardunix Services werden folgende weiteren Tools installiert
+
+* docker
+* k3s (Kubernetes)
+* podman
+* https://kubernetes.io/docs/reference/kubectl/overview/[kubectl]
+* https://helm.sh[Helm]
+* https://github.com/wagoodman/dive[dive]
+* https://github.com/aquasecurity/trivy[Trivy]
+
+==== VirtualBox Integration
+
+Es werden die VirtualBox Guest extensions installiert, damit eine Zeitsynchronisation stattfindet.
+
+
+
+=== Windows Setup
+
+* Chocolatey
+** choco install vagrant
+** choco install openssh
+** choco install microsoft-windows-terminal
+** choco install firacodenf
+** choco install vscode
+* Windows Terminal (+ Anleitung für Integration)
+* IntelliJ 2021.3 (aktuell noch EAP) für Remote Development
+** Aktuell noch etwas buggy
+* VSCode mit Remote Development Extension
+code --install-extension ms-vscode-remote.vscode-remote-extensionpack

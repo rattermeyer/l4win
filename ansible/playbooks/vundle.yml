@@ -1,0 +1,48 @@
+ - hosts: localhost
+   tasks:
+     - name: Install vim
+       become: True
+       package:
+         name: vim
+       loop:
+       - vim
+       - build-essentials
+       - cmake
+
+     - name: Install Vundle
+       git:
+         repo: https://github.com/gmarik/Vundle.vim.git
+         dest: "/home/{{ username }}/.vim/bundle/Vundle.vim"
+
+     - name: copy vimrc
+       copy:
+         src: "vimrc"
+         dest: "/home/{{ username }}/.vimrc"
+       notify: update plugins
+
+   handlers:
+     - name: Clean Plugins
+       ansible.builtin.command: vim +PluginClean +qall
+       listen: "update plugins"
+
+     - name: Install Plugins
+       ansible.builtin.command: vim +PluginInstall +qall
+       listen: "update plugins"
+
+     - name: Update Plugins
+       ansible.builtin.command: vim +PluginUpdate +qall
+       listen: "update plugins"
+
+     - name: link file
+       ansible.builtin.file:
+         state: link
+         src: /usr/bin/gcc
+         dest: /usr/bin/gcc-5
+       become: True
+       listen: "update plugins"
+
+     - name: run install.py
+       ansible.builtin.command:
+         cmd: ./install.py
+         chdir: /home/vagrant/.vim/bundle/YouCompleteMe
+       listen: "update plugins"

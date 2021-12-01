@@ -1,0 +1,44 @@
+- hosts: localhost
+  tasks:
+    - name: install git-commit-template
+      copy:
+        src: git-commit-template.txt
+        dest: "/home/{{ username }}/.git-commit-template.txt"
+
+    - name: copy git config
+      template:
+        src: "gitconfig.j2"
+        dest: "/home/{{ username }}/.gitconfig"
+
+    - name: "check if global gitignore exists"
+      stat:
+        path: "/home/{{ username }}/.gitignore"
+      register: g_stat
+
+    - name: compile global gitignore
+      block:
+        - name: ensure fragments directory exists
+          file:
+            path: "{{ fragments_path }}"
+            state: directory
+
+        - name: download fragments
+          get_url:
+            url: "https://raw.githubusercontent.com/github/gitignore/master/Global/{{ item }}"
+            dest: "{{ fragments_path }}"
+          with_items: "{{ gitignores }}"
+
+        - name: add fragments intro
+          lineinfile:
+            path: "{{ fragments_path }}/{{ item }}"
+            line: "# ----- {{ item }} ----- "
+            insertbefore: BOF
+          with_items: "{{ gitignores }}"
+
+        - name: assemble global gitignores
+          assemble:
+            src: "{{ fragments_path }}"
+            dest: "/home/{{ username }}/.gitignore"
+      when: g_stat.stat.exists == False
+  vars:
+    fragments_path: "/tmp/fragments"

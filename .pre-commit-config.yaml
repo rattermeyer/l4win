@@ -1,0 +1,38 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+exclude: "(^ansible/roles/)|(^.idea/)"
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: detect-aws-credentials
+        args: ["--allow-missing-credentials"]
+
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.16.0
+    hooks:
+      - id: gitlint
+
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.10  # Use the ref you want to point at
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-black
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.8.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/ansible-community/ansible-lint
+    rev: v5.2.1
+    hooks:
+      - id: ansible-lint
