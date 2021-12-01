@@ -2,28 +2,17 @@ all:
   hosts:
     localhost:
   vars:
-    user:
-      name: "Richard Attermeyer"
-      email: "richard.attermeyer@opitz-consulting.com"
     username: "{{ ansible_user_id }}"
     ansible_connection: local
     os_packages:
       - vim
       - tmux
-      - byobu
-      - podman
-      - docker
-      - powerline
-      - fonts-powerline
       - tig
       - meld
       - tmux
-      - java-11-openjdk-devel
       - jq
       - httpie
       - rvm
-      - vagrant
-      - vagrant-libvirt
       - cmake
       - make
       - python3-devel
@@ -33,7 +22,6 @@ all:
       - pgcli
       - borgbackup
       - silversearcher-ag
-      - chromium-browser
       - bat
     vscode_extensions:
       - visualstudioexptteam.vscodeintellicode
@@ -65,11 +53,21 @@ all:
       - mtxr.sqltools
       - atlassian.atlascode
     gitignores:
+      - Java.gitignore
+      - Go.gitignore
+      - Python.gitignore
+      - R.gitignore
+      - Sass.gitignore
+      - Gradle.gitignore
+      - Maven.gitignore
+      - Node.gitignore
+      - VirtualEnv.gitignore
+      - JetBrains.gitignore
+      - VisualStudioCode.gitignore
+      - Vim.gitignore
       - Ansible.gitignore
+      - Terraform.gitignore
       - Backup.gitignore
       - Diff.gitignore
-      - JetBrains.gitignore
       - Vagrant.gitignore
-      - Vim.gitignore
-      - VirtualEnv.gitignore
-      - VisualStudioCode.gitignore
+      - Packer.gitignore

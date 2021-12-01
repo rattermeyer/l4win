@@ -195,3 +195,34 @@ Lens could also be used on Windows, if you mount the k3s samba and map it to a d
 We have also `docker` and `podman` available on the VM.
 
 You can scan images using `trivy`(https://github.com/aquasecurity/trivy) and explore images using [`dive`](https://github.com/wagoodman/dive).
+
+To deploy for example a Kubernetes cluster, simply follow the strimzi instructions and run:
+
+```bash
+kubectl create namespace kafka
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-persistent-single.yaml -n kafka 
+kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka 
+kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.26.0-kafka-3.0.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --broker-list my-cluster-kafka-bootstrap:9092 --topic my-topic
+```
+
+... here you can write message, e.g. hello, world! that can be received by the consumer
+
+```bash
+kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.26.0-kafka-3.0.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic my-topic --from-beginning
+```
+
+## File exchange
+
+The Linux box provides two shares
+
+- vagrant (home)
+- k3s
+
+We assume, that the IP of your VM (see Vagrantfile) is 192.168.110.3, then you can mount it in Windows as:
+
+```cmd
+net use z: \\192.168.110.3\k3s /User:vagrant
+net use x: \\192.168.110.3\vagrant /User:vagrant
+```
+

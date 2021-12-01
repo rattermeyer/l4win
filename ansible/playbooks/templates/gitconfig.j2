@@ -1,17 +1,22 @@
-[user]
-	name = {{ user.name }}
-	email = {{ user.email | mandatory }}
+# user.name and email must be configured before commiting for the first time
+# git will print out instructions.
+# git config --global user.name Max Mustermann
+# git config --glboal user.email max.mustermann@mycompany.com
 [merge]
 	tool = meld
+
 [core]
+# Linux should have autocrlf set to input, see https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
 	autocrlf = input
 	excludesfile = /home/{{ username }}/.gitignore
 	editor = vim
 	pager = delta
+
 [interactive]
 	diffFilter = delta --color-only
+
 [credential]
 	helper = store
+	
 [commit]
         template = /home/{{ username }}/.git-commit-template.txt
-
