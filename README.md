@@ -153,9 +153,25 @@ The box is prepared for different languages / frameworks
 
 #### Java IDE
 
+##### From within VM
 If you need an IDE for development, you can use Intellij.
 This requires an X Server on Windows.
-Intellij is installed at /opt/intellij
+Intellij Ultimate is installed at /opt/intellij.
+At the time of writing, you could start it with `/opt/intellij/idea-IU-212.5457.46/bin/idea.sh`.
+You could of course also use `nohup /opt/intellij/idea-IU-212.5457.46/bin/idea.sh &`
+
+##### From Windows
+
+JetBrains is diving into the remote development area, feeling the pressure from VS Code.
+One Option currently is J[etBrains Gateway](https://www.jetbrains.com/remote-development/gateway/) which is in Beta, but seems quite usable.
+The next option is already on the horizon: [JetBrains Fleet](https://www.jetbrains.com/fleet/).
+Unfortunately, I have not been able to test this one yet.
+
+#### Visual Studio Code
+
+Visual Studio Code is also installed in Linux and you can simply start it up using `code` or `nohup code &`.
+But Visual Studio is quite good also in remote development. You can start VS Code in Windows and then connect to the VM remotely.
+You best configure your SSH key as described in the Windows Terminal customization section.
 
 ### Git support
 
@@ -230,4 +246,3 @@ We assume, that the IP of your VM (see Vagrantfile) is 192.168.110.3, then you c
 net use z: \\192.168.110.3\k3s /User:vagrant
 net use x: \\192.168.110.3\vagrant /User:vagrant
 ```
-
