@@ -2,7 +2,6 @@
 
 Basically, we need the following software installed on Windows
 
-- [VirtualBox](https://www.virtualbox.org)
 - [Chocolatey](https://chocolatey.org)
 
 This guide assumes, that you have installed these two already.
@@ -12,13 +11,16 @@ This guide assumes, that you have installed these two already.
 Now you need to install several things using Chocolatey
 
 ```bash
+choco install virtualbox
 choco install vagrant
 choco install openssh
 choco install microsoft-windows-terminal
 choco install firacodenf
 choco install vscode
+choco install intellijidea-ultimate
 choco install kube
 choco install kubernetes-cli
+
 ```
 
 You can use the `choco-install.bat` file in this directory.
@@ -173,6 +175,22 @@ Visual Studio Code is also installed in Linux and you can simply start it up usi
 But Visual Studio is quite good also in remote development. You can start VS Code in Windows and then connect to the VM remotely.
 You best configure your SSH key as described in the Windows Terminal customization section.
 
+#### Vim
+
+As a more CLI focused VM setup, a decent configured Vim is a requirements.
+We install Vim and Vundle and configure some very interesting plugins.
+Have a look at `~/.vimrc`.
+
+Most notable are:
+
+- [ctrlp](https://ctrlpvim.github.io/ctrlp.vim/)
+- [nerdtree](https://github.com/preservim/nerdtree)
+- [vim-airline](https://github.com/vim-airline/vim-airline)
+- [vim-fugitive](https://github.com/tpope/vim-fugitive) and [vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+- [vim-visual-multi](https://github.com/mg979/vim-visual-multi)
+- [vim-surround](https://github.com/tpope/vim-surround)
+- [editorconfig-vim](https://github.com/editorconfig/editorconfig-vim)
+
 ### Git support
 
 #### Git commit message template
@@ -204,8 +222,20 @@ Different CLI GUIs are installed
 
 ### Docker and Kubernetes
 
-The VM contains the [k3s](https://k3s.io) Kubernetes distribution.
+The VM contains [k3d](https://k3d.io) for starting docker based [k3s](https://k3s.io) clusters.
+We think, this a good starting point for developer machines.
+However also available is [k3sup](https://github.com/alexellis/k3sup) to easily setup a local k3s cluster.
+If you want a k3s local cluster just run:
+
+```bash
+k3sup install --local
+```
+
+The VM contains the [k3s](https://k3s.io) Kubernetes distribution as well as the k3d distribution.
+K3s is disabled by default, so you can easily use k3d which might be more suited for a development machine to test multiple different setups.
+
 The kubeconfig for this cluster is linked from `.kube/config`.
+If you want to use k3s execute the following commands:
 
 You can use the cli tool [`k9s`](https://github.com/derailed/k9s) to get an overview of the cluster.
 
@@ -232,6 +262,19 @@ kubectl -n kafka run kafka-producer -ti --image=quay.io/strimzi/kafka:0.26.0-kaf
 ```bash
 kubectl -n kafka run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.26.0-kafka-3.0.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic my-topic --from-beginning
 ```
+
+### Infrastructure as Code
+
+Different tools are available on the VM:
+
+- Ansible
+- Ansible-lint
+- shellcheck
+- terraform
+- terragrunt
+- aws cli (aws)
+- azure cli (az)
+
 
 ## File exchange
 
