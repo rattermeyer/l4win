@@ -11,14 +11,14 @@ let mapleader=","
 filetype off                  " required
 
 " ====== disable arrow keys - to learn it the real vim way ======
-map <up> <nop>
-map <down> <nop>
-map <left> <nop>
-map <right> <nop>
-imap <up> <nop>
-imap <down> <nop>
-imap <left> <nop>
-imap <right> <nop>
+" map <up> <nop>
+" map <down> <nop>
+" map <left> <nop>
+" map <right> <nop>
+" imap <up> <nop>
+" imap <down> <nop>
+" imap <left> <nop>
+" imap <right> <nop>
 
 map <C-t> :NERDTreeToggle<CR>
 
