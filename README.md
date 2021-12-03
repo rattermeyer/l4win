@@ -81,7 +81,9 @@ And change the font and choose the "FiraCode NF" font.
 
 ![Profile](/doc/images/terminal03.png "configuring font")
 
-And save your changes
+And save your changes.
+
+To support default key bindings of `broot`, you have to remove the key binding `Alt+Enter` for toggling full screen mode in Windows Terminal.
 
 ## Configure Linux VM
 
@@ -113,6 +115,15 @@ sdk install maven
 ```bash
 nvm install --lts
 ```
+
+### Enable Broot
+
+Simply run `broot` once. Then source your init files `. ~/.zshrc`.
+And now entering `br` allows you to search and navigate to any subdirectory.
+
+### Enable McFly
+
+Run `eval "$(mcfly init zsh)"` and when you now hit `Ctrl-R` you can easily surf your history.
 
 ## What is in the Box?
 
@@ -275,7 +286,6 @@ Different tools are available on the VM:
 - aws cli (aws)
 - azure cli (az)
 
-
 ## File exchange
 
 The Linux box provides two shares
@@ -285,7 +295,47 @@ The Linux box provides two shares
 
 We assume, that the IP of your VM (see Vagrantfile) is 192.168.110.3, then you can mount it in Windows as:
 
+TODO:
+
+- wsdd script: wget https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py
+- Mounting on Windows Explorer
+
 ```cmd
 net use z: \\192.168.110.3\k3s /User:vagrant
 net use x: \\192.168.110.3\vagrant /User:vagrant
 ```
+
+## Customize VM Settings
+
+Currently, you can easly change settings in the Vagrantfile.
+E.g. if you want to assign more memory or CPU to your machine.
+
+```ruby
+config.vm.provider "virtualbox" do |vb|
+     # Display the VirtualBox GUI when booting the machine
+     vb.gui = false
+     # Customize the amount of memory on the VM:
+     vb.memory = "16384"
+     # Customize the amount of CPUs assigned
+     vb.cpus = 12
+  end
+```
+
+And then enter `vagrant reload` to restart your VM.
+
+### Increasing the disk size
+
+TBD
+
+### Updating to a new l4w version
+
+Currently, you should run `vagrant up --provision` or `vagrant provision`.
+
+## Backing up
+
+Although not a direct backup, but you can use `vagrant snapshot` command to create snapshots and revert back to this version, if you encounter problems.
+For a real backup the recipe is (will detail later):
+
+- Creat a Windows shared foldger
+- Mount the folder `mount.cifs` on the VM
+- run borgbackup (restic had permission problems) with a suitable config.
