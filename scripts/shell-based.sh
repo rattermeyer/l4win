@@ -42,16 +42,6 @@ apt-get install -y docker-ce docker-ce-cli containerd.io
 groupadd docker
 usermod -aG docker vagrant
 
-# Hashicorp Tools
-echo "Install Hashicorp Tools..."
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt-get update && sudo apt-get install -y consul nomad vault terraform consul-template boundary
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; boundary config autocomplete install'
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; consul -autocomplete-install'
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; nomad -autocomplete-install'
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; terraform -install-autocomplete'
-
 # AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip

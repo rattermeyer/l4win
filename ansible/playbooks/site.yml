@@ -1,3 +1,4 @@
 - import_playbook: vundle.yml
 - import_playbook: nvm.yml
 - import_playbook: gitconfig.yml
+- import_playbook: hashicorp-tools.yml
