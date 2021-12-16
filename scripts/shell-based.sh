@@ -6,7 +6,8 @@ apt-get update
 apt-get install -y zsh jq shellcheck fzf silversearcher-ag htop \
   bat tldr zip unzip ca-certificates httpie tig curl gnupg lsb-release \
   firefox python3 python3-pip pylint rustc golang postgresql-client \
-  cmake mc unattended-upgrades
+  cmake mc unattended-upgrades \
+  golang-cfssl 
 apt-get install -y --no-install-recommends meld
  
 # install homebrew
