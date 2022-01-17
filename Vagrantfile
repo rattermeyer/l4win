@@ -59,9 +59,9 @@ Vagrant.configure("2") do |config|
      vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
      # Customize the amount of memory on the VM:
-     vb.memory = "16384"
+     vb.memory = "8192"
      # Customize the amount of CPUs assigned
-     vb.cpus = 6
+     vb.cpus = 4
   end
   #
   # View the documentation for the provider you are using for more
