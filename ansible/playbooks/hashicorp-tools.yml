@@ -1,0 +1,32 @@
+- hosts: localhost
+  tasks:
+    - name: "add hashicorp repository key"
+      become: true
+      ansible.builtin.apt_key:
+        url: https://apt.releases.hashicorp.com/gpg 
+
+    - name: "add hashicorp repository"
+      become: true
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://apt.releases.hashicorp.com focal main
+
+    - name: "add hashicorp tools"
+      become: true
+      ansible.builtin.apt:
+        pkg: 
+        - consul
+        - nomad
+        - vault
+        - terraform
+        - boundary
+    
+    - name: "cli completion"
+      ansible.builtin.lineinfile:
+        line: "{{ item }}"
+        path: "/home/vagrant/.zshrc"
+      loop:
+        - autoload -U +X bashcompinit && bashcompinit
+        - complete -o nospace -C /usr/bin/boundary boundary
+        - complete -o nospace -C /usr/bin/consul consul
+        - complete -o nospace -C /usr/bin/nomad nomad
+        - complete -o nospace -C /usr/bin/terraform terraform

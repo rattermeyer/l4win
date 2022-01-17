@@ -1,10 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+
+# Try to make it work on both Windows and Linux
+if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+  vboxmanage_path = "C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe"
+else
+  vboxmanage_path = "VBoxManage" # Assume it's in the path on Linux
+end
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
 Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -29,9 +37,13 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 6443, host: 6443, host_ip: "127.0.0.1", id: "kubernetes-api"
+  #config.vm.network "forwarded_port", guest: 6443, host: 6443, host_ip: "127.0.0.1", id: "kubernetes-api"
   config.vm.network "forwarded_port", guest: 9000, host: 9000, host_ip: "127.0.0.1", id: "kubernetes-2"
   config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "127.0.0.1", id: "react"
+  config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1", id: "generic-frontend"
+  config.vm.network "forwarded_port", guest: 8090, host: 8090, host_ip: "127.0.0.1", id: "generic-frontend"
+  config.vm.network "forwarded_port", guest: 8443, host: 8443, host_ip: "127.0.0.1", id: "generic-frontend-tls"
+  config.vm.network "forwarded_port", guest: 8081, host: 8081, host_ip: "127.0.0.1", id: "generic-backend"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -53,6 +65,7 @@ Vagrant.configure("2") do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
+     vb.name="l4win"
      # Display the VirtualBox GUI when booting the machine
      vb.gui = false
      vb.customize ["modifyvm", :id, "--vram", "128"]
@@ -62,6 +75,16 @@ Vagrant.configure("2") do |config|
      vb.memory = "8192"
      # Customize the amount of CPUs assigned
      vb.cpus = 4
+     # Get disk path
+     line = `"#{vboxmanage_path}" list systemproperties`.split(/\n/).grep(/Default machine folder/).first
+     vb_machine_folder = line.split(':', 2)[1].strip()
+     second_disk = File.join(vb_machine_folder, vb.name, 'disk2.vdi')
+ 
+     # Create and attach disk
+     unless File.exist?(second_disk)
+       vb.customize ['createhd', '--filename', second_disk, '--format', 'VDI', '--size', 60 * 1024]
+     end
+     vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', second_disk]
   end
   #
   # View the documentation for the provider you are using for more

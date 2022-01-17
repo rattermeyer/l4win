@@ -6,13 +6,11 @@
       dest: ~/.oh-my-zsh/custom/plugins/zsh-nvm
   
   - name: load zsh plugin
-    ansible.builtin.lineinfile:
+    ansible.builtin.blockinfile:
       path: "/home/{{ username }}/.zshrc"
-      line: plugins+=(zsh-nvm)
       insertbefore: "source $ZSH/oh-my-zsh.sh"
-
-  - name: configure lazy loading
-    ansible.builtin.lineinfile:
-      path: "/home/{{ username }}/.zshrc"
-      line: export NVM_LAZY_LOAD=true
+      marker: "# {mark} ANSIBLE MANAGED nvm BLOCK"
+      block: |
+        export NVM_LAZY_LOAD=true
+        plugins+=(zsh-nvm)
 

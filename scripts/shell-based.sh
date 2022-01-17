@@ -6,7 +6,8 @@ apt-get update
 apt-get install -y zsh jq shellcheck fzf silversearcher-ag htop \
   bat tldr zip unzip ca-certificates httpie tig curl gnupg lsb-release \
   firefox python3 python3-pip pylint rustc golang postgresql-client \
-  cmake mc unattended-upgrades
+  cmake mc unattended-upgrades \
+  golang-cfssl 
 apt-get install -y --no-install-recommends meld
  
 # install homebrew
@@ -41,16 +42,6 @@ apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io
 groupadd docker
 usermod -aG docker vagrant
-
-# Hashicorp Tools
-echo "Install Hashicorp Tools..."
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt-get update && sudo apt-get install -y consul nomad vault terraform consul-template boundary
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; boundary config autocomplete install'
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; consul -autocomplete-install'
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; nomad -autocomplete-install'
-sudo -H -u vagrant zsh -c 'cd /home/vagrant ; terraform -install-autocomplete'
 
 # AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
