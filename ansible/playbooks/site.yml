@@ -2,3 +2,5 @@
 - import_playbook: nvm.yml
 - import_playbook: gitconfig.yml
 - import_playbook: hashicorp-tools.yml
+- import_playbook: p10k.yml
+- import_playbook: omz-plugins-and-aliases.yml
