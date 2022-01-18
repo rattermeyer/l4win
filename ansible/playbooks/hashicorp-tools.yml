@@ -19,6 +19,7 @@
           - vault
           - terraform
           - boundary
+        update_cache: true
 
     - name: "cli completion"
       ansible.builtin.lineinfile:

@@ -46,7 +46,7 @@ usermod -aG docker vagrant
 
 # AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
+unzip -o awscliv2.zip
 ./aws/install
 
 # Azure CLI
@@ -81,16 +81,7 @@ sudo apt-get -y install podman
 
 ###### IDE / Editor ######################
 
-# Install IntelliJ
-# TODO Probably also in Ansible?
-echo "Install intellij..."
-if [ ! -d /opt/intellij ] ; then
-  curl -sL "https://download.jetbrains.com/product?code=IU&latest&distribution=linux" > /tmp/intellij.tar.gz
-  mkdir -p /opt/intellij
-  tar xvz -C /opt/intellij -f /tmp/intellij.tar.gz
-# making this owned by intellij allows for easy update from within intellij
-  chown -R vagrant: /opt/intellij
-fi
+./intellij.sh
 
 # VS Code
 sudo snap install --classic code
@@ -147,15 +138,11 @@ fi
 echo "installing multiple brews..."
 sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie kubectl k3d k3sup derailed/k9s/k9s dive helm terragrunt cdktf"
 
-# set alias
-# TODO this should be moved to ansible to make it idempotent
-echo "alias ls='lsd'" >> .oh-my-zsh/custom/alias.zsh
-echo "alias bat='batcat'" >> .oh-my-zsh/custom/alias.zsh
 # kubeconfig for k3s
-sudo -u vagrant mkdir /home/vagrant/.kube
+sudo -u vagrant mkdir -p /home/vagrant/.kube
 
 echo "install nerd font..."
-bash -s nerd-font.sh
+./nerd-font.sh
 
 # Samba
 # exporting vagrant home and /etc/rancher as shares.

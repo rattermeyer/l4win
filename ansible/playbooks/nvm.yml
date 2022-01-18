@@ -1,6 +1,6 @@
 - hosts: localhost
   tasks:
-  - name: clone nvm
+  - name: clone nvm plugin
     ansible.builtin.git:
       repo: https://github.com/lukechilds/zsh-nvm
       dest: ~/.oh-my-zsh/custom/plugins/zsh-nvm
