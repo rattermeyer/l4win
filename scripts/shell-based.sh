@@ -3,13 +3,13 @@
 
 echo "Install some additional packages..."
 apt-get update
-apt-get install -y zsh jq shellcheck fzf silversearcher-ag htop \
+apt-get install -y zsh jq shellcheck fzf fd-find silversearcher-ag htop \
   bat tldr zip unzip ca-certificates httpie tig curl gnupg lsb-release \
   firefox python3 python3-pip pylint rustc golang postgresql-client \
   cmake mc unattended-upgrades \
-  golang-cfssl 
+  golang-cfssl
 apt-get install -y --no-install-recommends meld
- 
+
 # install homebrew
 echo "Install homebrew..."
 curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | sudo -u vagrant bash -s CI=1
@@ -22,7 +22,8 @@ echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' | sudo -u vagrant 
 
 # allow setting of DISPLAY variable for Windows XServer
 # TODO this should be moved to ANSIBLE to make it idempotent
-echo export DISPLAY='$(/sbin/ip route | awk '"'"'/default/ { print $3 }'"'"'):0' | sudo -u vagrant tee -a /home/vagrant/.zprofile 
+# shellcheck disable=SC2016
+echo export DISPLAY='$(/sbin/ip route | awk '"'"'/default/ { print $3 }'"'"'):0' | sudo -u vagrant tee -a /home/vagrant/.zprofile
 
 # McFly (advanced shell history)
 echo "Install mcfly..."
@@ -53,7 +54,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # install podman
 # TODO move to ansible
-# shellcheck source=/etc/os-release
+# shellcheck disable=SC1091 source=/etc/os-release
 . /etc/os-release
 curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_$(lsb_release -rs)/Release.key" | sudo apt-key add -
 echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_$(lsb_release -rs)/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
@@ -68,7 +69,7 @@ sudo apt-get -y install podman
 # see https://k3s.io
 # TODO move to ansible
 #echo "Install k3s..."
-#curl -sfL https://get.k3s.io | sh - 
+#curl -sfL https://get.k3s.io | sh -
 ### enable vagrant to read kubeconfig for k3s
 #echo "K3S_KUBECONFIG_MODE=0644"| sudo tee /etc/systemd/system/k3s.service.env
 #systemctl restart k3s
@@ -94,7 +95,7 @@ fi
 # VS Code
 sudo snap install --classic code
 CODE_EXTENSIONS=(
-"amazonwebservices.aws-toolkit-vscode" 
+"amazonwebservices.aws-toolkit-vscode"
 "asciidoctor.asciidoctor-vscode"
 "DavidAnson.vscode-markdownlint"
 "dbaeumer.vscode-eslint"
@@ -113,9 +114,9 @@ CODE_EXTENSIONS=(
 "ms-python.python"
 "redhat.vscode-yaml"
 )
-for i in "${CODE_EXTENSIONS[@]}"; do 
+for i in "${CODE_EXTENSIONS[@]}"; do
   sudo -u vagrant code --install-extension "$i"
-done     
+done
 
 ########### CLI / Shell #################
 # following is customizing the user experience
@@ -173,7 +174,7 @@ echo "install lens"
 if [ ! -f /usr/bin/lens ] ; then
   LENS_FILE=Lens-5.3.0-latest.20211125.2.amd64.deb
   wget -q "https://api.k8slens.dev/binaries/${LENS_FILE}"
-  apt install -y libnotify4 libnss3 libxss1 xdg-utils libsecret-1-0 libnspr4 libsecret-common libxshmfence1 libgbm1  
+  apt install -y libnotify4 libnss3 libxss1 xdg-utils libsecret-1-0 libnspr4 libsecret-common libxshmfence1 libgbm1
   dpkg -i "${LENS_FILE}"
 fi
 

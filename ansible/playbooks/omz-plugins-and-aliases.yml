@@ -1,0 +1,15 @@
+- hosts: localhost
+  tasks:
+  - name: create alias
+    ansible.builtin.lineinfile:
+      path: "/home/{{ username }}/.zshrc"
+      line: alias {{ item.name }}="{{ item.command }}"
+    loop: "{{ omz_aliases }}"
+
+  - name: enable zsh plugins
+    ansible.builtin.blockinfile:
+      path: "/home/{{ username }}/.zshrc"
+      insertbefore: "source \\$ZSH/oh-my-zsh.sh"
+      marker: "# {mark} ANSIBLE MANAGED plugin BLOCK"
+      block: |
+        plugins+=({{ omz_plugins | join(' ') }})

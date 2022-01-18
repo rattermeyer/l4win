@@ -2,15 +2,15 @@
   tasks:
   - name: clone nvm
     ansible.builtin.git:
-      repo: https://github.com/lukechilds/zsh-nvm 
+      repo: https://github.com/lukechilds/zsh-nvm
       dest: ~/.oh-my-zsh/custom/plugins/zsh-nvm
-  
+      version: master
+
   - name: load zsh plugin
     ansible.builtin.blockinfile:
       path: "/home/{{ username }}/.zshrc"
-      insertbefore: "source $ZSH/oh-my-zsh.sh"
+      insertbefore: "source \\$ZSH/oh-my-zsh.sh"
       marker: "# {mark} ANSIBLE MANAGED nvm BLOCK"
       block: |
         export NVM_LAZY_LOAD=true
         plugins+=(zsh-nvm)
-

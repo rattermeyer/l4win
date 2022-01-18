@@ -4,6 +4,21 @@ all:
   vars:
     username: "{{ ansible_user_id }}"
     ansible_connection: local
+    omz_plugins:
+      - kubectl
+      - gradle
+      - tmux
+      - mvn
+      - ansible
+      - terraform
+      - nomad
+      - sdk
+      - yarn
+    omz_aliases:
+      - {name: "cat", command: "batcat"}
+      - {name: "ls", command: "lsd"}
+      - {name: "top", command: "htop"}
+      - {name: "fd", command: "fdfind"}
     os_packages:
       - vim
       - tmux
@@ -61,13 +76,13 @@ all:
       - Gradle.gitignore
       - Maven.gitignore
       - Node.gitignore
-      - VirtualEnv.gitignore
-      - JetBrains.gitignore
-      - VisualStudioCode.gitignore
-      - Vim.gitignore
-      - Ansible.gitignore
-      - Terraform.gitignore
-      - Backup.gitignore
-      - Diff.gitignore
-      - Vagrant.gitignore
       - Packer.gitignore
+      - Terraform.gitignore
+      - Global/VirtualEnv.gitignore
+      - Global/JetBrains.gitignore
+      - Global/VisualStudioCode.gitignore
+      - Global/Vim.gitignore
+      - Global/Ansible.gitignore
+      - Global/Backup.gitignore
+      - Global/Diff.gitignore
+      - Global/Vagrant.gitignore
