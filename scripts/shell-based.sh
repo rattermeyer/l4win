@@ -136,7 +136,7 @@ fi
 
 ## brew installs
 echo "installing multiple brews..."
-sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie kubectl k3d k3sup derailed/k9s/k9s dive helm terragrunt cdktf"
+sudo -H -i -u vagrant zsh -c "brew install lsd gitui lazygit git-delta procs broot rs/tap/curlie kubectl krew k3d k3sup derailed/k9s/k9s dive helm terragrunt cdktf"
 
 # kubeconfig for k3s
 sudo -u vagrant mkdir -p /home/vagrant/.kube
