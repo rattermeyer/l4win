@@ -13,3 +13,8 @@
       marker: "# {mark} ANSIBLE MANAGED plugin BLOCK"
       block: |
         plugins+=({{ omz_plugins | join(' ') }})
+
+  - name: mcfly initialization
+    ansible.builtin.lineinfile:
+      path: "/home/{{ username }}/.zshrc"
+      line: eval "$(mcfly init zsh)"
