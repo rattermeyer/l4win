@@ -11,15 +11,14 @@ This guide assumes, that you have installed these two already.
 Now you need to install several things using Chocolatey
 
 ```bash
-choco install virtualbox
 choco install vagrant
 choco install openssh
 choco install microsoft-windows-terminal
 choco install firacodenf
 choco install vscode
-choco install intellijidea-ultimate
-choco install kube
 choco install kubernetes-cli
+choco install lens
+choco install vcxsrv
 
 ```
 
