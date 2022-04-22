@@ -11,15 +11,14 @@ This guide assumes, that you have installed these two already.
 Now you need to install several things using Chocolatey
 
 ```bash
-choco install virtualbox
 choco install vagrant
 choco install openssh
 choco install microsoft-windows-terminal
 choco install firacodenf
 choco install vscode
-choco install intellijidea-ultimate
-choco install kube
 choco install kubernetes-cli
+choco install lens
+choco install vcxsrv
 
 ```
 
@@ -63,10 +62,10 @@ See this superuser [arcticle](https://superuser.com/a/1296046) for the right set
 You should be able to login with your private key file as well:
 
 ```bash
-ssh -i D:/noscan/git/l4win-dev/.vagrant/machines/default/virtualbox/private_key vagrant@192.168.2.2
+ssh -i D:/noscan/git/l4win-dev/.vagrant/machines/default/virtualbox/private_key vagrant@192.168.110.2
 ```
 
-Replacing the path with the path of your `IdentityFile`.
+Replacing the path with the path of your `IdentityFile`. The IP address must be the same as specified in the vagrant file under `config.vm.network`. 
 
 ## Configure Windows Terminal
 
@@ -96,7 +95,7 @@ You should be asked several questions. Configure it to your liking
 You must set your name and email, so git can record this in the commits.
 
 ```bash
-git config --global user.name Max Mustermann
+git config --global user.name "Max Mustermann"
 git config --global user.email max.mustermann@mycompany.com
 ```
 
